@@ -3,25 +3,52 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MineralSupertrumps {
-    static Card[] deck = new Card[60];
-    static int players;
+    final static int INITIALHAND = 8;
+    static ArrayList<Card> deck = new ArrayList<Card>();
+    static int playerAmount;
+    static ArrayList<Player> players = new ArrayList<Player>();
 
     public static void main(String[] args) {
-        parseCards();
         Scanner input = new Scanner(System.in);
-        System.out.println("How many players? (Minimum - 3, Maximum - 5)");
-        players = input.nextInt();
-        while (players < 3 || players > 5) {
-            System.out.println("Invalid number, 3 to 5 players are allowed only");
-            players = input.nextInt();
-        }
+
+        parseCards();
         shuffleDeck();
+
+        System.out.println("How many players? (Minimum - 3, Maximum - 5)");
+        playerAmount = input.nextInt();
+        while (playerAmount < 3 || playerAmount > 5) {
+            System.out.println("Invalid number, 3 to 5 players are allowed only");
+            playerAmount = input.nextInt();
+        }
+        setPlayers(playerAmount);
+
+        dealCards();
+    }
+
+    private static void dealCards() {
+        for (int i = 0; i < INITIALHAND; i++) {
+            for (int y = 0; y < playerAmount; y++) {
+                players.get(y).addCard(deck.get(0));
+                deck.remove(0);
+            }
+        }
+        System.out.println(deck.size());
+    }
+
+    private static void setPlayers(int playerAmount) {
+        for (int i = 0; i < playerAmount; i++) {
+            Player player = new Player();
+            players.add(player);
+        }
+        int dealerRandom = ThreadLocalRandom.current().nextInt(0, playerAmount - 1);
+        players.get(dealerRandom).setDealer();
     }
 
     private static void shuffleDeck() {
-        Collections.shuffle(Arrays.asList(deck));
+        Collections.shuffle(deck);
     }
 
     private static void parseCards() {
@@ -29,15 +56,13 @@ public class MineralSupertrumps {
         BufferedReader br = null;
         String line;
         String delimiter = ",";
-        int index = 0;
 
         try {
             br = new BufferedReader(new FileReader(file));
             br.readLine(); // To read over first line of column titles
             while ((line = br.readLine()) != null) {
                 String[] card = line.split(delimiter);
-                deck[index] = new MineralCard(card[0], Double.parseDouble(card[1]), Double.parseDouble(card[2]), card[3], card[4], card[5]);
-                index++;
+                deck.add(new MineralCard(card[0], Double.parseDouble(card[1]), Double.parseDouble(card[2]), card[3], card[4], card[5]));
             }
         } catch (FileNotFoundException e) {
             System.out.println("File \"" + file + "\" has not found");
@@ -49,20 +74,15 @@ public class MineralSupertrumps {
                     br.close();
                 }
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("General I/O exception, restart the program");
             }
         }
         //Since the are no supertrump cards in the given file, they are added manually below
-        deck[index] = new SuperTrumpCard("The Miner", "Change trumps category to \"Economic value\"");
-        index++;
-        deck[index] = new SuperTrumpCard("The Petrologist", "Change trumps category to \"Crustal abundance\"");
-        index++;
-        deck[index] = new SuperTrumpCard("The Gemmologist", "Change trumps category to \"Hardness\"");
-        index++;
-        deck[index] = new SuperTrumpCard("The Mineralogist", "Change trumps category to \"Cleavage\"");
-        index++;
-        deck[index] = new SuperTrumpCard("The Geophysicist", "Change trumps category to \"Specific gravity\", or throw \"Magnetite\"");
-        index++;
-        deck[index] = new SuperTrumpCard("The Geologist", "Change trumps category of your choice");
+        deck.add(new SuperTrumpCard("The Miner", "Change trumps category to \"Economic value\""));
+        deck.add(new SuperTrumpCard("The Petrologist", "Change trumps category to \"Crustal abundance\""));
+        deck.add(new SuperTrumpCard("The Gemmologist", "Change trumps category to \"Hardness\""));
+        deck.add(new SuperTrumpCard("The Mineralogist", "Change trumps category to \"Cleavage\""));
+        deck.add(new SuperTrumpCard("The Geophysicist", "Change trumps category to \"Specific gravity\", or throw \"Magnetite\""));
+        deck.add(new SuperTrumpCard("The Geologist", "Change trumps category of your choice"));
     }
 }
