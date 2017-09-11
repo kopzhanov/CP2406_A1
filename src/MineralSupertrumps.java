@@ -7,9 +7,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MineralSupertrumps {
     final static int INITIALHAND = 8;
+
+    static boolean firstTurn = true;
     static ArrayList<Card> deck = new ArrayList<Card>();
+    static ArrayList<Card> pile = new ArrayList<Card>();
     static int playerAmount;
     static ArrayList<Player> players = new ArrayList<Player>();
+    static int category = 0;
 
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
@@ -23,9 +27,10 @@ public class MineralSupertrumps {
             System.out.println("Invalid number, 3 to 5 players are allowed only");
             playerAmount = input.nextInt();
         }
-        setPlayers(playerAmount);
 
+        setPlayers(playerAmount);
         dealCards();
+        startGame();
     }
 
     private static void dealCards() {
@@ -35,7 +40,6 @@ public class MineralSupertrumps {
                 deck.remove(0);
             }
         }
-        System.out.println(deck.size());
     }
 
     private static void setPlayers(int playerAmount) {
@@ -62,7 +66,7 @@ public class MineralSupertrumps {
             br.readLine(); // To read over first line of column titles
             while ((line = br.readLine()) != null) {
                 String[] card = line.split(delimiter);
-                deck.add(new MineralCard(card[0], Double.parseDouble(card[1]), Double.parseDouble(card[2]), card[3], card[4], card[5]));
+                deck.add(new Card(card[0], Double.parseDouble(card[1]), Double.parseDouble(card[2]), card[3], card[4], card[5]));
             }
         } catch (FileNotFoundException e) {
             System.out.println("File \"" + file + "\" has not found");
@@ -84,5 +88,14 @@ public class MineralSupertrumps {
         deck.add(new SuperTrumpCard("The Mineralogist", "Change trumps category to \"Cleavage\""));
         deck.add(new SuperTrumpCard("The Geophysicist", "Change trumps category to \"Specific gravity\", or throw \"Magnetite\""));
         deck.add(new SuperTrumpCard("The Geologist", "Change trumps category of your choice"));
+    }
+
+    private static void startGame() {
+        for (Player player :
+                players) {
+            if (player.isDealer()) {
+                player.playCard();
+            }
+        }
     }
 }
