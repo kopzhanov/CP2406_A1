@@ -48,11 +48,11 @@ public class Player {
     public void playCard() {
         int card;
         Scanner input = new Scanner(System.in);
-        System.out.println("It's player " + this.id + " turn");
+        System.out.println("It's player " + id + " turn");
         showHand();
         System.out.println("Choose a number:");
         card = input.nextInt();
-        while (card < 1 || card > this.hand.size() + 1) {
+        while (card < 1 || card > hand.size() + 1) {
             System.out.println("Wrong number, input a number according to the table");
             card = input.nextInt();
         }
@@ -60,14 +60,14 @@ public class Player {
             pass = true;
         } else {
             card--;
-            System.out.println("Chosen Card: " + this.hand.get(card).getName());
+            System.out.println("Chosen Card: " + hand.get(card).getName());
             if (MineralSupertrumps.firstTurn) {
                 int category;
-                System.out.println("1.Hardness: " + this.hand.get(card).getHardness());
-                System.out.println("2.Specific Gravity: " + this.hand.get(card).getGravity());
-                System.out.println("3.Cleavage: " + this.hand.get(card).getCleavage());
-                System.out.println("4.Crustal Abundance: " + this.hand.get(card).getAbundance());
-                System.out.println("5.Economic Value: " + this.hand.get(card).getEcoValue());
+                System.out.println("1.Hardness: " + hand.get(card).getHardness());
+                System.out.println("2.Specific Gravity: " + hand.get(card).getGravity());
+                System.out.println("3.Cleavage: " + hand.get(card).getCleavage());
+                System.out.println("4.Crustal Abundance: " + hand.get(card).getAbundance());
+                System.out.println("5.Economic Value: " + hand.get(card).getEcoValue());
 
                 System.out.println("Choose a category according to its number");
                 category = input.nextInt();
@@ -78,8 +78,11 @@ public class Player {
                 MineralSupertrumps.category = category;
                 MineralSupertrumps.firstTurn = false;
             }
-            MineralSupertrumps.pile.add(this.hand.get(card));
-            this.hand.remove(card);
+            MineralSupertrumps.pile.add(hand.get(card));
+            hand.remove(card);
+            if (hand.size() == 0) {
+                MineralSupertrumps.players.remove(this);
+            }
         }
     }
 }
