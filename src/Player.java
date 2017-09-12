@@ -76,12 +76,14 @@ class Player {
         } else if (hand.get(card - 1).getInstruction() != null) {
             card--;
             SuperTrumpCard.playCard(hand.get(card), hasMagnetite(), this);
-            hand.remove(card);
             MineralSupertrumps.trumpCardPlayed();
             if (MineralSupertrumps.firstTurn) {
                 MineralSupertrumps.superTrumpCardInFirstRound = true;
             }
             MineralSupertrumps.firstTurn = false;
+            MineralSupertrumps.lastPlayedCard = hand.get(card);
+            hand.remove(card);
+
             //If Mineral Card chosen
         } else {
             card--;
@@ -119,6 +121,7 @@ class Player {
         pass = true;
         this.addCard(MineralSupertrumps.deck.get(0));
         MineralSupertrumps.deck.remove(0);
+        System.out.println("Player " + id + " passes the turn and taking 1 card from the deck");
     }
 
     private boolean hasMagnetite() {
