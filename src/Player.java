@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 class Player {
@@ -63,6 +64,8 @@ class Player {
                 validCard = true;
             } catch (InvalidCardException e) {
                 System.out.println(e.getMessage());
+            } catch (InputMismatchException e) {
+                System.out.println("A number is require, please try again");
             }
         }
 
@@ -84,18 +87,21 @@ class Player {
             card--;
             System.out.println("Chosen Card: " + hand.get(card).getName());
             if (MineralSupertrumps.firstTurn) {
-                int category;
+                int category = 0;
                 System.out.println("1.Hardness: " + hand.get(card).getHardness());
                 System.out.println("2.Specific Gravity: " + hand.get(card).getGravity());
                 System.out.println("3.Cleavage: " + hand.get(card).getCleavage());
                 System.out.println("4.Crustal Abundance: " + hand.get(card).getAbundance());
                 System.out.println("5.Economic Value: " + hand.get(card).getEcoValue());
 
-                System.out.println("Choose a category according to its number");
-                category = MineralSupertrumps.input.nextInt();
                 while (category < 1 || category > 5) {
-                    System.out.println("Wrong number, input number according to a category");
-                    category = MineralSupertrumps.input.nextInt();
+                    try {
+                        System.out.println("Choose a category according to its number (Minimum - 0, Maximum - 5)");
+                        category = MineralSupertrumps.input.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.out.println("A number is required, please try again");
+                        MineralSupertrumps.input.next();
+                    }
                 }
                 MineralSupertrumps.category = category;
                 MineralSupertrumps.firstTurn = false;

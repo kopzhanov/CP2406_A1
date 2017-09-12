@@ -24,18 +24,20 @@ public class MineralSupertrumps {
 
     public static void main(String[] args) {
         input = new Scanner(System.in);
-        int playerAmount;
-
+        int playerAmount = 0;
         parseCards();
         shuffleDeck();
 
-        System.out.println("How many players? (Minimum - 3, Maximum - 5)");
-        playerAmount = input.nextInt();
         while (playerAmount < 3 || playerAmount > 5) {
-            System.out.println("Invalid number, 3 to 5 players are allowed only");
-            playerAmount = input.nextInt();
-        }
+            try {
 
+                System.out.println("How many players? (Minimum - 3, Maximum - 5)");
+                playerAmount = input.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("A number is required, please try again");
+                input.next();
+            }
+        }
         setPlayers(playerAmount);
         dealCards();
         runGame();
@@ -135,27 +137,29 @@ public class MineralSupertrumps {
     }
 
     private static void showLastPlayedCard() {
-        System.out.println("Previously played card: " + lastPlayedCard.getName());
-        switch (category) {
-            case 1: {
-                System.out.println(lastPlayedCard.getName() + "'s Hardness:" + lastPlayedCard.getHardness());
-                break;
-            }
-            case 2: {
-                System.out.println(lastPlayedCard.getName() + "'s Specific Gravity:" + lastPlayedCard.getGravity());
-                break;
-            }
-            case 3: {
-                System.out.println(lastPlayedCard.getName() + "'s Cleavage:" + lastPlayedCard.getCleavage());
-                break;
-            }
-            case 4: {
-                System.out.println(lastPlayedCard.getName() + "'s Crustal Abundance:" + lastPlayedCard.getAbundance());
-                break;
-            }
-            case 5: {
-                System.out.println(lastPlayedCard.getName() + "'s Economic Value:" + lastPlayedCard.getEcoValue());
-                break;
+        if (lastPlayedCard != null) {
+            System.out.println("Previously played card: " + lastPlayedCard.getName());
+            switch (category) {
+                case 1: {
+                    System.out.println(lastPlayedCard.getName() + "'s Hardness:" + lastPlayedCard.getHardness());
+                    break;
+                }
+                case 2: {
+                    System.out.println(lastPlayedCard.getName() + "'s Specific Gravity:" + lastPlayedCard.getGravity());
+                    break;
+                }
+                case 3: {
+                    System.out.println(lastPlayedCard.getName() + "'s Cleavage:" + lastPlayedCard.getCleavage());
+                    break;
+                }
+                case 4: {
+                    System.out.println(lastPlayedCard.getName() + "'s Crustal Abundance:" + lastPlayedCard.getAbundance());
+                    break;
+                }
+                case 5: {
+                    System.out.println(lastPlayedCard.getName() + "'s Economic Value:" + lastPlayedCard.getEcoValue());
+                    break;
+                }
             }
         }
     }

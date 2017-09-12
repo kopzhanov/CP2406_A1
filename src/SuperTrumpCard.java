@@ -1,3 +1,5 @@
+import java.util.InputMismatchException;
+
 class SuperTrumpCard extends Card {
     SuperTrumpCard(String name, String instruction) {
         super(name, instruction);
@@ -40,8 +42,13 @@ class SuperTrumpCard extends Card {
                 System.out.println("Choose a category according to its number");
                 category = MineralSupertrumps.input.nextInt();
                 while (category < 1 || category > 5) {
-                    System.out.println("Wrong number, input number according to a category");
-                    category = MineralSupertrumps.input.nextInt();
+                    try {
+                        System.out.println("Choose a category according to its number (Minimum - 0, Maximum - 5)");
+                        category = MineralSupertrumps.input.nextInt();
+                    } catch (InputMismatchException e) {
+                        System.out.println("A number is required, try again");
+                        MineralSupertrumps.input.next();
+                    }
                 }
                 MineralSupertrumps.category = category;
                 break;
