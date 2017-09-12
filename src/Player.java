@@ -65,8 +65,12 @@ public class Player {
                 System.out.println(e.getMessage());
             }
         }
+
         if (card == hand.size() + 1) {
             pass = true;
+        } else if (hand.get(card - 1).getInstruction() != null) {
+            card--;
+            SuperTrumpCard.playCard(hand.get(card));
         } else {
             card--;
             System.out.println("Chosen Card: " + hand.get(card).getName());
@@ -87,7 +91,7 @@ public class Player {
                 MineralSupertrumps.category = category;
                 MineralSupertrumps.firstTurn = false;
             }
-            MineralSupertrumps.pile.add(hand.get(card));
+            MineralSupertrumps.lastPlayedCard = hand.get(card);
             hand.remove(card);
             if (hand.size() == 0) {
                 MineralSupertrumps.players.remove(this);
