@@ -11,8 +11,10 @@ public class MineralSupertrumps {
     static boolean firstTurn = true;
     static ArrayList<Card> deck = new ArrayList<Card>();
     static ArrayList<Card> pile = new ArrayList<Card>();
-    static int playerAmount;
     static ArrayList<Player> players = new ArrayList<Player>();
+    static int playerAmount;
+    static int dealerIndex;
+    static int turnPlayerIndex;
     static int category = 0;
 
     public static void main(String[] args) {
@@ -47,8 +49,7 @@ public class MineralSupertrumps {
             Player player = new Player();
             players.add(player);
         }
-        int dealerRandom = ThreadLocalRandom.current().nextInt(0, playerAmount - 1);
-        players.get(dealerRandom).setDealer();
+        dealerIndex = ThreadLocalRandom.current().nextInt(0, playerAmount - 1);
     }
 
     private static void shuffleDeck() {
@@ -91,11 +92,34 @@ public class MineralSupertrumps {
     }
 
     private static void startGame() {
+        nextPlayer(dealerIndex);
+        newRound();
+    }
+
+    private static void nextPlayer(int index) {
+        // return given int as index for player array
+        if (playerAmount - 1 == index) {
+            turnPlayerIndex = 0;
+        } else {
+            turnPlayerIndex = index + 1;
+        }
+    }
+
+    static void newRound() {
+        System.out.println("NEW ROUND");
+        int playerPassed = 0;
         for (Player player :
                 players) {
-            if (player.isDealer()) {
-                player.playCard();
-            }
+            player.setPass(false);
         }
+        while (playerPassed != playerAmount - 1) {
+            players.get(turnPlayerIndex).playCard();
+            if (players.get(turnPlayerIndex).isPass()) {
+                playerPassed++;
+            }
+            nextPlayer(turnPlayerIndex);
+        }
+        firstTurn = true;
+        newRound();
     }
 }
