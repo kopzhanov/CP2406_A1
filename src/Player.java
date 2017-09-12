@@ -70,7 +70,7 @@ public class Player {
             pass = true;
         } else if (hand.get(card - 1).getInstruction() != null) {
             card--;
-            SuperTrumpCard.playCard(hand.get(card));
+            SuperTrumpCard.playCard(hand.get(card), hasMagnetite(), this);
         } else {
             card--;
             System.out.println("Chosen Card: " + hand.get(card).getName());
@@ -97,5 +97,14 @@ public class Player {
                 MineralSupertrumps.players.remove(this);
             }
         }
+    }
+
+    private boolean hasMagnetite() {
+        boolean isMagnetite = false;
+        for (Card card : hand) {
+            if (card.getName().equals("Magnetite"))
+                isMagnetite = true;
+        }
+        return isMagnetite;
     }
 }
