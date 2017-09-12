@@ -107,6 +107,9 @@ public class MineralSupertrumps {
         } else {
             turnPlayerIndex = index + 1;
         }
+        if (players.get(turnPlayerIndex).isPass()) {
+            nextPlayer(turnPlayerIndex);
+        }
     }
 
     static void newRound() {
@@ -125,5 +128,46 @@ public class MineralSupertrumps {
         }
         firstTurn = true;
         newRound();
+    }
+
+    static void validCard(Card card) throws InvalidCardException {
+        switch (category) {
+            case 1: {
+                if (card.getHardness() < pile.get(pile.size() - 1).getHardness()) {
+                    throw new InvalidCardException("Hardness of " + card.getName() + " is lower than of " + pile.get(pile.size() - 1).getName());
+                }
+                break;
+            }
+            case 2: {
+                if (card.getGravity() < pile.get(pile.size() - 1).getGravity()) {
+                    throw new InvalidCardException("Gravity of " + card.getName() + " is lower than of " + pile.get(pile.size() - 1).getName());
+                }
+                break;
+            }
+            case 3: {
+                int firstIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(card.getCleavage());
+                int secondIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(pile.get(pile.size() - 1).getCleavage());
+                if (firstIndex < secondIndex) {
+                    throw new InvalidCardException("Cleavage of " + card.getName() + " is lower than of " + pile.get(pile.size() - 1).getName());
+                }
+                break;
+            }
+            case 4: {
+                int firstIndex = Arrays.asList(RANKING_CRUSTAL_ABUNDANCE).indexOf(card.getAbundance());
+                int secondIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(pile.get(pile.size() - 1).getAbundance());
+                if (firstIndex < secondIndex) {
+                    throw new InvalidCardException("Crustal Abundance of " + card.getName() + " is lower than of " + pile.get(pile.size() - 1).getName());
+                }
+                break;
+            }
+            case 5: {
+                int firstIndex = Arrays.asList(RANKING_ECONOMIC_VALUE).indexOf(card.getEcoValue());
+                int secondIndex = Arrays.asList(RANKING_ECONOMIC_VALUE).indexOf(pile.get(pile.size() - 1).getEcoValue());
+                if (firstIndex < secondIndex) {
+                    throw new InvalidCardException("Economic Value of " + card.getName() + " is lower than of " + pile.get(pile.size() - 1).getName());
+                }
+                break;
+            }
+        }
     }
 }
