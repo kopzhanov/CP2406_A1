@@ -46,15 +46,24 @@ public class Player {
     }
 
     public void playCard() {
-        int card;
+        boolean validCard = false;
+        int card = 0;
         Scanner input = new Scanner(System.in);
         System.out.println("It's player " + id + " turn");
-        showHand();
-        System.out.println("Choose a number:");
-        card = input.nextInt();
-        while (card < 1 || card > hand.size() + 1) {
-            System.out.println("Wrong number, input a number according to the table");
-            card = input.nextInt();
+        while ((card < 1 || card > hand.size() + 1) || !validCard) {
+            try {
+                showHand();
+                System.out.println("Choose a number according to the table above");
+                card = input.nextInt();
+                if (card <= hand.size() && card > 0 && !MineralSupertrumps.firstTurn) {
+                    MineralSupertrumps.validCard(hand.get(card - 1));
+                } else {
+                    validCard = true;
+                }
+                validCard = true;
+            } catch (InvalidCardException e) {
+                System.out.println(e.getMessage());
+            }
         }
         if (card == hand.size() + 1) {
             pass = true;
