@@ -7,6 +7,10 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class MineralSupertrumps {
     final static int INITIALHAND = 8;
+    final static String[] RANKING_CLEAVAGE = {"none", "poor/none", "1 poor", "2 poor", "1 good", "1 good,1 poor", "2 good",
+            "3 good", "1 perfect", "1 perfect,1 good", "1 perfect,2 good", "2 perfect,1 good", "3 perfect", "4 perfect", "6 perfect"};
+    final static String[] RANKING_CRUSTAL_ABUNDANCE = {"ultratrace", "trace", "low", "moderate", "high", "very high"};
+    final static String[] RANKING_ECONOMIC_VALUE = {"trivial", "low", "moderate", "high", "very high", "i'm rich!"};
 
     static boolean firstTurn = true;
     static ArrayList<Card> deck = new ArrayList<Card>();
