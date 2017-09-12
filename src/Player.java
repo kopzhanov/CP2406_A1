@@ -1,37 +1,37 @@
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class Player {
-    public static final String COLOR_RESET = "\u001B[0m";
-    public static final String COLOR_RED = "\u001B[31m";
-    public static final String COLOR_BLUE = "\u001B[34m";
+class Player {
+    private static final String COLOR_RESET = "\u001B[0m";
+    private static final String COLOR_RED = "\u001B[31m";
+    private static final String COLOR_BLUE = "\u001B[34m";
 
     private static int counter = 1;
     private int id = 1;
-    private ArrayList<Card> hand = new ArrayList<Card>();
+    private ArrayList<Card> hand = new ArrayList<>();
     private boolean pass;
 
-    public Player() {
+    Player() {
         this.id = counter++;
     }
 
-    public int getID() {
+    int getID() {
         return id;
     }
 
-    public boolean isPass() {
+    boolean isPass() {
         return pass;
     }
 
-    public void setPass(boolean pass) {
+    void setPass(boolean pass) {
         this.pass = pass;
     }
 
-    public void addCard(Card card) {
+    void addCard(Card card) {
         this.hand.add(card);
     }
 
-    public void showHand() {
+    private void showHand() {
         int count = 1;
         System.out.format("%-10s%-20s%-10s%-20s%-20s%-20s%-15s\n", "Number", "Name", "Hardness", "Specific Gravity", "Cleavage", "Crustal Abundance", "Economic Value");
         for (Card card : this.hand) {
@@ -45,7 +45,7 @@ public class Player {
         System.out.format(COLOR_RED + "%-10sPass Turn\n" + COLOR_RESET, count);
     }
 
-    public void playCard() {
+    void playCard() {
         boolean validCard = false;
         int card = 0;
         System.out.println("It's player " + id + " turn");
@@ -75,6 +75,10 @@ public class Player {
             SuperTrumpCard.playCard(hand.get(card), hasMagnetite(), this);
             hand.remove(card);
             MineralSupertrumps.trumpCardPlayed();
+            if (MineralSupertrumps.firstTurn) {
+                MineralSupertrumps.superTrumpCardInFirstRound = true;
+            }
+            MineralSupertrumps.firstTurn = false;
             //If Mineral Card chosen
         } else {
             card--;
@@ -98,13 +102,14 @@ public class Player {
             }
             MineralSupertrumps.lastPlayedCard = hand.get(card);
             hand.remove(card);
-            if (hand.size() == 0) {
-                MineralSupertrumps.players.remove(this);
-            }
+        }
+        if (hand.size() == 0) {
+            MineralSupertrumps.players.remove(this);
+            System.out.println("Player " + id + " won the hand and so leaves the game");
         }
     }
 
-    public void passTurn() {
+    private void passTurn() {
         pass = true;
         this.addCard(MineralSupertrumps.deck.get(0));
         MineralSupertrumps.deck.remove(0);
