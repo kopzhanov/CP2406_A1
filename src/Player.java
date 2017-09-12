@@ -48,13 +48,13 @@ public class Player {
     public void playCard() {
         boolean validCard = false;
         int card = 0;
-        Scanner input = new Scanner(System.in);
         System.out.println("It's player " + id + " turn");
         while ((card < 1 || card > hand.size() + 1) || !validCard) {
             try {
+                MineralSupertrumps.input = new Scanner(System.in);
                 showHand();
                 System.out.println("Choose a number according to the table above");
-                card = input.nextInt();
+                card = MineralSupertrumps.input.nextInt();
                 if (card <= hand.size() && card > 0 && !MineralSupertrumps.firstTurn) {
                     MineralSupertrumps.validCard(hand.get(card - 1));
                 } else {
@@ -66,11 +66,16 @@ public class Player {
             }
         }
 
+        //If pass turn chosen
         if (card == hand.size() + 1) {
-            pass = true;
+            passTurn();
+            //If Super Trump Card chosen
         } else if (hand.get(card - 1).getInstruction() != null) {
             card--;
             SuperTrumpCard.playCard(hand.get(card), hasMagnetite(), this);
+            hand.remove(card);
+            MineralSupertrumps.trumpCardPlayed();
+            //If Mineral Card chosen
         } else {
             card--;
             System.out.println("Chosen Card: " + hand.get(card).getName());
@@ -83,10 +88,10 @@ public class Player {
                 System.out.println("5.Economic Value: " + hand.get(card).getEcoValue());
 
                 System.out.println("Choose a category according to its number");
-                category = input.nextInt();
+                category = MineralSupertrumps.input.nextInt();
                 while (category < 1 || category > 5) {
                     System.out.println("Wrong number, input number according to a category");
-                    category = input.nextInt();
+                    category = MineralSupertrumps.input.nextInt();
                 }
                 MineralSupertrumps.category = category;
                 MineralSupertrumps.firstTurn = false;
@@ -97,6 +102,12 @@ public class Player {
                 MineralSupertrumps.players.remove(this);
             }
         }
+    }
+
+    public void passTurn() {
+        pass = true;
+        this.addCard(MineralSupertrumps.deck.get(0));
+        MineralSupertrumps.deck.remove(0);
     }
 
     private boolean hasMagnetite() {

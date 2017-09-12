@@ -15,14 +15,16 @@ public class MineralSupertrumps {
     static boolean firstTurn = true;
     static ArrayList<Card> deck = new ArrayList<Card>();
     static Card lastPlayedCard;
+    static int playerPassed = 0;
     static ArrayList<Player> players = new ArrayList<Player>();
     static int playerAmount;
     static int dealerIndex;
     static int turnPlayerIndex;
     static int category = 0;
+    static Scanner input;
 
     public static void main(String[] args) {
-        Scanner input = new Scanner(System.in);
+        input = new Scanner(System.in);
 
         parseCards();
         shuffleDeck();
@@ -113,21 +115,22 @@ public class MineralSupertrumps {
     }
 
     private static void newRound() {
-        System.out.println("NEW ROUND");
-        int playerPassed = 0;
-        for (Player player :
-                players) {
-            player.setPass(false);
-        }
-        while (playerPassed != playerAmount - 1) {
-            players.get(turnPlayerIndex).playCard();
-            if (players.get(turnPlayerIndex).isPass()) {
-                playerPassed++;
+        if (players.size() != 1) {
+            System.out.println("NEW ROUND");
+            for (Player player :
+                    players) {
+                player.setPass(false);
             }
-            nextPlayer(turnPlayerIndex);
+            while (playerPassed != playerAmount - 1) {
+                players.get(turnPlayerIndex).playCard();
+                if (players.get(turnPlayerIndex).isPass()) {
+                    playerPassed++;
+                }
+                nextPlayer(turnPlayerIndex);
+            }
+            firstTurn = true;
+            newRound();
         }
-        firstTurn = true;
-        newRound();
     }
 
     static void validCard(Card card) throws InvalidCardException {
@@ -147,24 +150,24 @@ public class MineralSupertrumps {
                     break;
                 }
                 case 3: {
-                    int firstIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(card.getCleavage());
-                    int secondIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(lastPlayedCard.getCleavage());
+                    int firstIndex = Arrays.binarySearch(RANKING_CLEAVAGE, card.getCleavage());
+                    int secondIndex = Arrays.binarySearch(RANKING_CLEAVAGE, lastPlayedCard.getCleavage());
                     if (firstIndex <= secondIndex) {
                         throw new InvalidCardException("Cleavage of " + card.getName() + " is not higher than of " + lastPlayedCard.getName());
                     }
                     break;
                 }
                 case 4: {
-                    int firstIndex = Arrays.asList(RANKING_CRUSTAL_ABUNDANCE).indexOf(card.getAbundance());
-                    int secondIndex = Arrays.asList(RANKING_CLEAVAGE).indexOf(lastPlayedCard.getAbundance());
+                    int firstIndex = Arrays.binarySearch(RANKING_CRUSTAL_ABUNDANCE, card.getAbundance());
+                    int secondIndex = Arrays.binarySearch(RANKING_CLEAVAGE, lastPlayedCard.getAbundance());
                     if (firstIndex <= secondIndex) {
                         throw new InvalidCardException("Crustal Abundance of " + card.getName() + " is not higher than of " + lastPlayedCard.getName());
                     }
                     break;
                 }
                 case 5: {
-                    int firstIndex = Arrays.asList(RANKING_ECONOMIC_VALUE).indexOf(card.getEcoValue());
-                    int secondIndex = Arrays.asList(RANKING_ECONOMIC_VALUE).indexOf(lastPlayedCard.getEcoValue());
+                    int firstIndex = Arrays.binarySearch(RANKING_ECONOMIC_VALUE, card.getEcoValue());
+                    int secondIndex = Arrays.binarySearch(RANKING_ECONOMIC_VALUE, lastPlayedCard.getEcoValue());
                     if (firstIndex <= secondIndex) {
                         throw new InvalidCardException("Economic Value of " + card.getName() + " is not higher than of " + lastPlayedCard.getName());
                     }
@@ -172,5 +175,14 @@ public class MineralSupertrumps {
                 }
             }
         }
+    }
+
+    static void trumpCardPlayed() {
+        for (Player player : players) {
+            if (player.isPass()) {
+                player.setPass(false);
+            }
+        }
+        playerPassed = 0;
     }
 }

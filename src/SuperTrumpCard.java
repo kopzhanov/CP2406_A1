@@ -32,7 +32,6 @@ public class SuperTrumpCard extends Card {
                 break;
             }
             case "The Geologist": {
-                Scanner input = new Scanner(System.in);
                 int category;
                 System.out.println("1.Hardness");
                 System.out.println("2.Specific Gravity");
@@ -41,10 +40,10 @@ public class SuperTrumpCard extends Card {
                 System.out.println("5.Economic Value");
 
                 System.out.println("Choose a category according to its number");
-                category = input.nextInt();
+                category = MineralSupertrumps.input.nextInt();
                 while (category < 1 || category > 5) {
                     System.out.println("Wrong number, input number according to a category");
-                    category = input.nextInt();
+                    category = MineralSupertrumps.input.nextInt();
                 }
                 MineralSupertrumps.category = category;
                 break;
